@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 import Weather from './Weather'
 import Pagination from 'react-js-pagination'
+import Api from './Hooks/Api'
 
 function App () {
 
-  const [weathers, setWeathers] = useState([])
-  const [numberOfWeathers, setNumberOfWeathers] = useState(0)
   const [activePage, setActivePage] = useState(1)
   const [sliceStart, setSliceStart] = useState(0)
   const [sliceEnd, setSliceEnd] = useState(8)
-  const [isLoading, setLoading] = useState(true)
+  const [weathers, numberOfWeathers, isLoading] = Api('https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00')
 
   function handlePageChange(pageNumber) {
     console.log(`active page is ${pageNumber}`)
@@ -18,18 +17,6 @@ function App () {
     setSliceStart((pageNumber - 1) * 8)
     setSliceEnd(pageNumber * 8)
   }
-
-  useEffect(() => {
-    setLoading(true)
-    fetch('https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00')
-      .then((res) => res.json())
-      .then(({ list, count }) => {
-        setWeathers(list)
-        setNumberOfWeathers(count)
-        setLoading(false)
-      })
-      .catch((err) => console.log(err, 'API FETCH ERROR'))
-  }, [])
 
   return (
     <div className="container">
