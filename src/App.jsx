@@ -2,14 +2,18 @@ import { useState } from 'react'
 import './App.css'
 import Weather from './Weather'
 import Pagination from 'react-js-pagination'
-import Api from './Hooks/Api'
+import Api from './Hooks/useApi'
+import useScript from './Hooks/useScript'
 
 function App () {
 
   const [activePage, setActivePage] = useState(1)
   const [sliceStart, setSliceStart] = useState(0)
   const [sliceEnd, setSliceEnd] = useState(8)
-  const [weathers, numberOfWeathers, isLoading] = Api('https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00')
+  const [weathers, numberOfWeathers, isLoading] = Api (
+    'https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00', 3000
+    )
+  useScript('https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js')
 
   function handlePageChange(pageNumber) {
     console.log(`active page is ${pageNumber}`)
@@ -31,7 +35,14 @@ function App () {
       <div className="row">
         {
           isLoading ? 
-          <div><h1>Getting Weather info. Please wait....</h1></div> : 
+          <div className="mx-auto">
+            <div className="mt-4">
+              <h2>Getting weathers condition. Please wait.</h2>
+            </div>
+            <div>
+              <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_wuqUXi.json"  background="transparent"  speed="1"  style={{"height" : "600px", "width" : '600px'}}  loop  autoplay></lottie-player>
+            </div>
+          </div> : 
           weathers.slice(sliceStart, sliceEnd).map(weather => <Weather weather={weather} key={weather.id} />) 
         }
       </div>
@@ -51,6 +62,7 @@ function App () {
           />
         </div>
       }
+
     </div>
   )
 }

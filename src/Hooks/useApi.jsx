@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export default function Api (url) {
+export default function Api (url, timeout = 0) {
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -22,13 +22,15 @@ export default function Api (url) {
       .then(({ list, count }) => {
         setData(list)
         setNumberOfData(count)
-        setLoading(false)
+        setTimeout(() => {
+          setLoading(false)
+        }, timeout)
       })
       .catch((err) => {
         setError(err)
         return console.log(err, 'API FETCH ERROR')
     })
-  }, [url])
+  }, [url, timeout])
 
   return [data, numberOfData, loading, error]
 }
