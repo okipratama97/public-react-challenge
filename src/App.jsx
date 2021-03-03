@@ -1,69 +1,30 @@
-import { useState } from 'react'
 import './App.css'
-import Weather from './Weather'
-import Pagination from 'react-js-pagination'
-import Api from './Hooks/useApi'
-import useScript from './Hooks/useScript'
+import './pages/Weathers'
+import { Switch, Route } from 'react-router-dom'
+import Weathers from './pages/Weathers'
+import Favorites from './pages/Favorites'
+import NavBar from './components/NavBar'
+import Dummy from './pages/Dummy'
 
 function App () {
-
-  const [activePage, setActivePage] = useState(1)
-  const [sliceStart, setSliceStart] = useState(0)
-  const [sliceEnd, setSliceEnd] = useState(8)
-  const [weathers, numberOfWeathers, isLoading] = Api (
-    'https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00', 3000
-    )
-  useScript('https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js')
-
-  function handlePageChange(pageNumber) {
-    console.log(`active page is ${pageNumber}`)
-    setActivePage(pageNumber)
-    setSliceStart((pageNumber - 1) * 8)
-    setSliceEnd(pageNumber * 8)
-  }
-
   return (
-    <div className="container">
-      <div className="row justify-content-center">
-        <div className="col-4">
-          <h1>
-            Current Weather
-          </h1>
-        </div>
-      </div>
-      
-      <div className="row">
-        {
-          isLoading ? 
-          <div className="mx-auto">
-            <div className="mt-4">
-              <h2>Getting weathers condition. Please wait.</h2>
-            </div>
-            <div>
-              <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_wuqUXi.json"  background="transparent"  speed="1"  style={{"height" : "600px", "width" : '600px'}}  loop  autoplay></lottie-player>
-            </div>
-          </div> : 
-          weathers.slice(sliceStart, sliceEnd).map(weather => <Weather weather={weather} key={weather.id} />) 
-        }
-      </div>
+    <>
+      {/* Header and nav part */}
+      <NavBar />
 
-      {
-        isLoading ? 
-        <div></div> :
-        <div>
-          <Pagination
-            activePage={activePage}
-            itemsCountPerPage={8}
-            totalItemsCount={numberOfWeathers}
-            pageRangeDisplayed={5}
-            onChange={handlePageChange.bind(this)}
-            itemClass="page-item"
-            linkClass="page-link"
-          />
-        </div>
-      }
-
-    </div>
+      {/* Weather cards part */}
+      <Switch>
+        <Route path="/locations">
+          <Favorites />
+        </Route>
+        <Route path="/dummy">
+          <Dummy />
+        </Route>
+        <Route path="/">
+          <Weathers />
+        </Route>
+      </Switch>
+    </>
   )
 }
 
