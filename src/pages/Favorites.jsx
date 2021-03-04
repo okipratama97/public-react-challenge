@@ -44,7 +44,9 @@ function Favorites() {
       </div>
       {
         isLoading ? 
-        <div><p>No Favorite. Please add some :)</p></div> :
+        <div><p>No favorite location. Please add some :)</p></div> :
+        numberOfWeathers === 0 ?
+        <div><p>No favorite location. Please add some :)</p></div> :
         <div>
           <Pagination
             activePage={activePage}

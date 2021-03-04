@@ -22,7 +22,6 @@ function Weather (props) {
   }
 
   function goToDetail(id) {
-    console.log(id, 'imma go here')
     history.push('/locations/' + id)
   }
 

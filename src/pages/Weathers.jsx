@@ -8,7 +8,7 @@ import { setWeathersActivePage, setWeathersSliceStart, setWeathersSliceEnd } fro
 function Weathers() {
   const dispatch = useDispatch()
 
-  useFetchWeathers('https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00', 2000)
+  useFetchWeathers('https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00', 1200)
   const activePage = useSelector(state => state.weathers.activePage)
   const sliceStart = useSelector(state => state.weathers.sliceStart)
   const sliceEnd = useSelector(state => state.weathers.sliceEnd)
