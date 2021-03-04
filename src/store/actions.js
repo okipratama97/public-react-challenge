@@ -1,3 +1,8 @@
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
+
 export function setWeathers(payload) {
   return { type: 'WEATHERS/SETWEATHERS', payload }
 }
@@ -54,8 +59,9 @@ export function fetchWeathers(payload, timeout = 0) {
 }
 
 export function fetchWeather(payload, timeout = 0) {
-  return async function (dispatch) {
+  return async function (dispatch, getState) {
     try {
+      console.log(dispatch, '<<<!! dispatch')
       console.log('Fetching Single Weather')
       dispatch(setWeathersIsLoading(true))
       const response = await fetch(payload)
@@ -76,10 +82,62 @@ export function setFavorites(payload) {
 }
 
 export function addFavorites(payload) {
-  return { type: 'FAVORITES/ADDFAVORITES', payload }
+  // return { type: 'FAVORITES/ADDFAVORITES', payload }
+  return (dispatch, getState) => {
+    try {
+      const { favorites } = getState()
+      const favoriteLength = favorites.favorites.length
+      const newFavorite = [...favorites.favorites.filter((el) => el.id !== payload.id), payload]
+
+      if (favoriteLength === newFavorite.length) {
+        console.log('Duplikasi')
+        MySwal.fire({
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          timer: 2000,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', MySwal.stopTimer)
+            toast.addEventListener('mouseleave', MySwal.resumeTimer)
+          },
+          icon: 'error',
+          title: 'This location already added to favorites'
+        })
+      } else {
+        console.log('Tidak Duplikasi')
+        MySwal.fire({
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          timer: 2000,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', MySwal.stopTimer)
+            toast.addEventListener('mouseleave', MySwal.resumeTimer)
+          },
+          icon: 'success',
+          title: 'Added this location to favorites!'
+        })
+        dispatch(setFavorites(newFavorite))
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 }
 
 export function removeFavorites(payload) {
+  MySwal.fire({
+    toast: true,
+    position: 'top',
+    showConfirmButton: false,
+    timer: 2000,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', MySwal.stopTimer)
+      toast.addEventListener('mouseleave', MySwal.resumeTimer)
+    },
+    icon: 'success',
+    title: 'Removed this location from favorites!'
+  })
   return { type: 'FAVORITES/REMOVEFAVORITES', payload }
 }
 
