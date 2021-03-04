@@ -1,86 +1,35 @@
-import React from 'react'
 import './App.css'
-import Weather from './Weather'
-import Pagination from 'react-js-pagination'
+import './pages/Weathers'
+import { Switch, Route } from 'react-router-dom'
+import Weathers from './pages/Weathers'
+import Favorites from './pages/Favorites'
+import NavBar from './components/NavBar'
+import Weather from './pages/Weather'
+import useScript from './hooks/useScript'
 
-class App extends React.Component {
-  constructor (props) {
-    super(props)
 
-    this.state = {
-      weathers: [],
-      numberOfWeathers: 0,
-      activePage: 1,
-      sliceStart: 0,
-      sliceEnd: 8,
-      isLoaded: false
-    }
-  }
+function App () {
+  useScript('https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js')
 
-  render() {
-    return (
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-4">
-            <h1>
-              Current Weather
-            </h1>
-          </div>
-        </div>
-        
-        <div className="row">
-          {
-            this.state.isLoaded ? 
-            this.state.weathers.slice(this.state.sliceStart, this.state.sliceEnd).map(weather => <Weather weather={weather} key={weather.id} />) 
-            : <div></div>
-          }
-        </div>
+  return (
+    <>
+      {/* Header and nav part */}
+      <NavBar />
 
-        {
-          this.state.isLoaded ? 
-          <div>
-            <Pagination
-              activePage={this.state.activePage}
-              itemsCountPerPage={8}
-              totalItemsCount={this.state.numberOfWeathers}
-              pageRangeDisplayed={5}
-              onChange={this.handlePageChange.bind(this)}
-              itemClass="page-item"
-              linkClass="page-link"
-            />
-          </div>
-          : <div></div>
-        }
-        
-
-      </div>
-    )
-  }
-
-   
-  handlePageChange(pageNumber) {
-    console.log(`active page is ${pageNumber}`)
-    this.setState({
-      activePage: pageNumber,
-      sliceStart: ((pageNumber - 1) * 8),
-      sliceEnd: (pageNumber * 8)
-    })
-  }
-
-  componentDidMount() {
-    fetch('https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00')
-      .then((res) => res.json())
-      .then(({ list, count }) => {
-        console.log((Math.ceil(count / 8)))
-        this.setState({
-          weathers: list,
-          numberOfWeathers: count,
-          weatherImg: `http://openweathermap.org/img/wn/${list[0].weather[0].icon}@4x.png`,
-          isLoaded: true
-        })
-      })
-      .catch((err) => console.log(err, 'API FETCH ERROR'))
-  }
+      {/* Weather cards part */}
+      <Switch>
+        <Route path="/locations/:id">
+          <Weather />
+        </Route>
+        <Route path="/favorites">
+          <Favorites />
+        </Route>
+        <Route path="/">
+          <Weathers />
+        </Route>
+      </Switch>
+    </>
+  )
 }
 
 export default App
