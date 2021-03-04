@@ -1,22 +1,23 @@
+import '../App.css'
 import { NavLink } from 'react-router-dom'
 
 function NavBar () {
   return (
     <>
-      <nav className="navbar navbar-expand navbar-light bg-light">
+      <nav className="navbar navbar-expand navbar-light nav-bg-custom">
         <img className="logo" src={process.env.PUBLIC_URL + '/app-logo.png'} alt="logo" />
-          <ul class="nav justify-content-center">
-            <li class="nav-item">
+          <ul className="nav justify-content-center">
+            <li className="nav-item">
               <NavLink className="nav-link" exact to="/" activeStyle={{
                 fontWeight: "bold",
                 color: "grey"
               }}>Home </NavLink>
             </li>
-            <li class="nav-item">
-              <NavLink className="nav-link" to="/locations" activeStyle={{
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/favorites" activeStyle={{
                 fontWeight: "bold",
                 color: "grey"
-              }}>Favorite</NavLink>
+              }}>Favorites</NavLink>
             </li>
           </ul>
       </nav>

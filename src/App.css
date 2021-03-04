@@ -40,3 +40,18 @@
 .logo {
   width: 70px;
 }
+
+.weather-card:hover {
+  box-shadow: 5px 5px 15px 5px #C0E5FF
+}
+
+.nav-bg-custom {
+  background: #F2F2F2;
+  background: -moz-linear-gradient(left, #F2F2F2 0%, #E6F3FF 81%, #FFFCFC 100%);
+  background: -webkit-linear-gradient(left, #F2F2F2 0%, #E6F3FF 81%, #FFFCFC 100%);
+  background: linear-gradient(to right, #F2F2F2 0%, #E6F3FF 81%, #FFFCFC 100%);
+}
+
+.weather-card-body:hover {
+  cursor: pointer
+}

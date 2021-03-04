@@ -1,24 +1,26 @@
-import Weather from "../components/Weather";
-import { useState } from 'react'
+import Weather from "../components/CardWeather"
 import Pagination from 'react-js-pagination'
-import Api from '../hooks/useApi'
-import useScript from '../hooks/useScript'
+import { useFetchWeathers } from '../hooks/useApi'
+import { useSelector, useDispatch } from "react-redux"
+import { setWeathersActivePage, setWeathersSliceStart, setWeathersSliceEnd } from '../store/actions'
+
 
 function Weathers() {
+  const dispatch = useDispatch()
 
-  const [activePage, setActivePage] = useState(1)
-  const [sliceStart, setSliceStart] = useState(0)
-  const [sliceEnd, setSliceEnd] = useState(8)
-  const [weathers, numberOfWeathers, isLoading] = Api (
-    'https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00', 3000
-    )
-  useScript('https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js')
+  useFetchWeathers('https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00', 2000)
+  const activePage = useSelector(state => state.weathers.activePage)
+  const sliceStart = useSelector(state => state.weathers.sliceStart)
+  const sliceEnd = useSelector(state => state.weathers.sliceEnd)
+  const isLoading = useSelector(state => state.weathers.isLoading)
+  const numberOfWeathers = useSelector(state => state.weathers.numberOfWeathers)
+  const weathers = useSelector(state => state.weathers.weathers)
 
   function handlePageChange(pageNumber) {
     console.log(`active page is ${pageNumber}`)
-    setActivePage(pageNumber)
-    setSliceStart((pageNumber - 1) * 8)
-    setSliceEnd(pageNumber * 8)
+    dispatch(setWeathersActivePage(pageNumber))
+    dispatch(setWeathersSliceStart((pageNumber - 1) * 8))
+    dispatch(setWeathersSliceEnd(pageNumber * 8))
   }
 
   return (

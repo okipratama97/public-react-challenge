@@ -1,24 +1,24 @@
-import Weather from "../components/Weather";
-import { useState } from 'react'
+// import Weather from "../components/Weather";
+import WeatherDetail from "../components/CardWeatherDetail";
 import Pagination from 'react-js-pagination'
-import Api from '../hooks/useApi'
-import useScript from '../hooks/useScript'
+import { useSelector, useDispatch } from "react-redux"
+import { setFavoritesActivePage, setFavoritesSliceStart, setFavoritesSliceEnd } from '../store/actions'
 
-function Weathers() {
+function Favorites() {
+  const dispatch = useDispatch()
 
-  const [activePage, setActivePage] = useState(1)
-  const [sliceStart, setSliceStart] = useState(0)
-  const [sliceEnd, setSliceEnd] = useState(8)
-  const [weathers, numberOfWeathers, isLoading] = Api (
-    'https://api.openweathermap.org/data/2.5/find?lat=-6.842629&lon=107.616877&cnt=20&units=metric&appid=0136eeaa7054259785b882d3e82dbf00', 3000
-    )
-  useScript('https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js')
+  const activePage = useSelector(state => state.favorites.activePage)
+  const sliceStart = useSelector(state => state.favorites.sliceStart)
+  const sliceEnd = useSelector(state => state.favorites.sliceEnd)
+  const isLoading = useSelector(state => state.favorites.isLoading)
+  const numberOfWeathers = useSelector(state => state.favorites.numberOfWeathers)
+  const weathers = useSelector(state => state.favorites.favorites)
 
   function handlePageChange(pageNumber) {
     console.log(`active page is ${pageNumber}`)
-    setActivePage(pageNumber)
-    setSliceStart((pageNumber - 1) * 8)
-    setSliceEnd(pageNumber * 8)
+    dispatch(setFavoritesActivePage(pageNumber))
+    dispatch(setFavoritesSliceStart((pageNumber - 1) * 4))
+    dispatch(setFavoritesSliceEnd(pageNumber * 4))
   }
 
   return (
@@ -39,16 +39,16 @@ function Weathers() {
               <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_wuqUXi.json"  background="transparent"  speed="1"  style={{"height" : "600px", "width" : '600px'}}  loop  autoplay></lottie-player>
             </div>
           </div> : 
-          weathers.slice(sliceStart, sliceEnd).map(weather => <Weather weather={weather} key={weather.id} />) 
+          weathers.slice(sliceStart, sliceEnd).map(weather => <WeatherDetail weather={weather} key={weather.id} />) 
         }
       </div>
       {
         isLoading ? 
-        <div></div> :
+        <div><p>No Favorite. Please add some :)</p></div> :
         <div>
           <Pagination
             activePage={activePage}
-            itemsCountPerPage={8}
+            itemsCountPerPage={4}
             totalItemsCount={numberOfWeathers}
             pageRangeDisplayed={5}
             onChange={handlePageChange.bind(this)}
@@ -61,4 +61,4 @@ function Weathers() {
   )
 }
 
-export default Weathers
+export default Favorites

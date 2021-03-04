@@ -1,36 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { fetchWeathers, fetchWeather } from '../store/actions'
 
-export default function Api (url, timeout = 0) {
-
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [numberOfData, setNumberOfData] = useState(0)
-  const [error, setError] = useState(null)
-
+export function useFetchWeathers (url, timeout = 0) {
+  const dispatch = useDispatch()
   useEffect(() => {
-    setLoading(true)
-    fetch(url)
-      .then((res) => {
-        try {
-          console.log('FETCHING DATA')
-          return res.json()
-        } catch (error) {
-          console.log(error)
-          throw new Error(error)
-        }
-      })
-      .then(({ list, count }) => {
-        setData(list)
-        setNumberOfData(count)
-        setTimeout(() => {
-          setLoading(false)
-        }, timeout)
-      })
-      .catch((err) => {
-        setError(err)
-        return console.log(err, 'API FETCH ERROR')
-    })
-  }, [url, timeout])
+    dispatch(fetchWeathers(url, timeout))
+  }, [url, timeout, dispatch])
+}
 
-  return [data, numberOfData, loading, error]
+export function useFetchWeather (url, timeout = 0) {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchWeather(url, timeout))
+  }, [url, timeout, dispatch])
 }
